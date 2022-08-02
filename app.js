@@ -8,7 +8,7 @@ const _ = require("lodash");
 
 const app = express();
 
-mongoose.connect("mongodb://localhost:27017/todolistDB");
+mongoose.connect("mongodb+srv://admin-scarlett:Shiori0714@cluster0.y3z9a.mongodb.net/todoListDB");
 
 const itemsSchema = {
   name: String,
@@ -146,6 +146,7 @@ app.get("/about", function (req, res) {
   res.render("about");
 });
 
-app.listen(3000, function () {
-  console.log("Server started on port 3000");
+
+app.listen(process.env.PORT, function () {
+  console.log("Server started");
 });
