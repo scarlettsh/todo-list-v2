@@ -8,7 +8,9 @@ const _ = require("lodash");
 
 const app = express();
 
-mongoose.connect("mongodb+srv://admin-scarlett:Shiori0714@cluster0.y3z9a.mongodb.net/todoListDB");
+mongoose.connect(
+  "mongodb+srv://admin-scarlett:Shiori0714@cluster0.y3z9a.mongodb.net/todoListDB"
+);
 
 const itemsSchema = {
   name: String,
@@ -45,7 +47,7 @@ const defaultItems = [workout, fishing, biking];
 let day;
 
 app.get("/", function (req, res) {
-   day = date.getDate();
+  day = date.getDate();
 
   Item.find({}, (err, foundItems) => {
     if (foundItems.length === 0) {
@@ -67,33 +69,32 @@ app.post("/delete", (req, res) => {
   const id = req.body.checkbox;
   const listName = req.body.listName;
 
-  if(listName === day){
-    List.updateMany({}, {$pull: {items: {_id: id}}}, (err, result) => {
-      if(!err){
+  if (listName === day) {
+    List.updateMany({}, { $pull: { items: { _id: id } } }, (err, result) => {
+      if (!err) {
         console.log(result);
       }
-    })
+    });
     Item.findByIdAndRemove(id, (err, result) => {
       if (err) {
         console.log(err);
       } else {
         console.log(result);
-      res.redirect("/");
+        res.redirect("/");
       }
     });
-
-
-  }else{
-    List.updateOne({name: listName}, {
-      $pull: {items: {_id: id}}
-    }, (err, result) => {
-      console.log(result);
-      res.redirect("/" + listName);
-    })
+  } else {
+    List.updateOne(
+      { name: listName },
+      {
+        $pull: { items: { _id: id } },
+      },
+      (err, result) => {
+        console.log(result);
+        res.redirect("/" + listName);
+      }
+    );
   }
-
-
-
 });
 
 app.post("/", function (req, res) {
@@ -109,21 +110,21 @@ app.post("/", function (req, res) {
   if (listTitle === day) {
     res.redirect("/");
   } else {
-    List.findOne({ name: listTitle}, (err, doc) => {
+    List.findOne({ name: listTitle }, (err, doc) => {
       //the list document already exists
-      doc.items.push(item);  
+      doc.items.push(item);
       doc.save(); // if the doc exists, doc.save() calls updateOne() only with the modification to the db.
       //better update ways: call .updateOne() types of method
-      res.redirect("/"+listTitle);
-    })
+      res.redirect("/" + listTitle);
+    });
   }
 });
 
 app.get("/:todolist", (req, res) => {
   let listName = req.params.todolist;
-  
+
   listName = _.capitalize(listName);
-  
+
   List.findOne({ name: listName }, (err, doc) => {
     if (!err) {
       if (!doc) {
@@ -145,7 +146,6 @@ app.get("/:todolist", (req, res) => {
 app.get("/about", function (req, res) {
   res.render("about");
 });
-
 
 app.listen(process.env.PORT, function () {
   console.log("Server started");
