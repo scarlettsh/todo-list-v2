@@ -9,7 +9,7 @@ const _ = require("lodash");
 const app = express();
 
 mongoose.connect(
-  "mongodb+srv://admin-scarlett:Shiori0714@cluster0.y3z9a.mongodb.net/todoListDB"
+  "mongodb+srv://admin-scarlett:"+ process.env.mongodbPassword +"@cluster0.y3z9a.mongodb.net/todoListDB"
 );
 
 const itemsSchema = {
